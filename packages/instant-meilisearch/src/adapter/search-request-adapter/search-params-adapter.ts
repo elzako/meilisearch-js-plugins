@@ -93,7 +93,12 @@ export function MeiliParamsCreator(searchContext: SearchContext) {
       return meiliSearchParams
     },
     addQuery() {
-      meiliSearchParams.q = query
+      // Check if query is an object with a "vector" property
+      if (typeof query === "object" && query !== null && "vector" in query) {
+        meiliSearchParams.vector = query.vector;
+      } else {
+        meiliSearchParams.q = query as string; // Treat it as a string query otherwise
+      }
     },
     addFacets() {
       const value = <Mutable<typeof facets>>facets
